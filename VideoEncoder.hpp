@@ -169,6 +169,10 @@ public:
         COM_CHECK(attribs->SetUINT32(MF_LOW_LATENCY, TRUE));
         COM_CHECK(attribs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE));
 
+        // This attribute specifies the number of coded sequences which the MPEG4 sink will place in each fragment when in fragmented mode.
+        GUID MF_MPEG4SINK_CODED_SEQUENCES_PER_FRAGMENT = { 0xfc1b3bd6, 0x692d, 0x4ce5, {0x92, 0x99, 0x73, 0x8a, 0xa5, 0x46, 0x3e, 0x9a} };
+        COM_CHECK(attribs->SetUINT32(MF_MPEG4SINK_CODED_SEQUENCES_PER_FRAGMENT, 1));
+
         // create sink writer with specified output format
         IMFMediaTypePtr mediaTypeOut = MediaTypeutput(fps, bit_rate);
         COM_CHECK(MFCreateFMPEG4MediaSink(stream, mediaTypeOut, nullptr, &m_media_sink)); // "fragmented" MPEG4 does not require seekable byte-stream
@@ -194,6 +198,7 @@ public:
             COM_CHECK(codec->GetValue(&CODECAPI_AVEncMPVGOPSize, &gop_size));
             //gop_size = (unsigned int)1; // VT_UI4 type
             //COM_CHECK(codec->SetValue(&CODECAPI_AVEncMPVGOPSize, &gop_size));
+
         }
 
         COM_CHECK(m_sink_writer->BeginWriting());
